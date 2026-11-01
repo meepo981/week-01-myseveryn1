@@ -1,5 +1,5 @@
 export type { paths, components } from "./generated/schema";
-
+export * from "./schemas";
 import type { components } from "./generated/schema";
 
 export type Event = components["schemas"]["Event"];
