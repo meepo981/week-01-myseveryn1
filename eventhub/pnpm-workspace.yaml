@@ -7,3 +7,6 @@ engineStrict: true
 allowBuilds:
   esbuild: true
   "@scarf/scarf": false
+  '@prisma/client': true
+  '@prisma/engines': true
+  prisma: true

@@ -7,6 +7,5 @@ import { EventRepository } from "./event.repository";
 @Module({
   controllers: [CatalogController],
   providers: [CatalogService, EventRepository],
-  exports: [CatalogService]
 })
 export class CatalogModule {}
