@@ -1,13 +1,36 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
+
+import React from "react";
+import ReactDOM from "react-dom/client";
 import { App } from "./App";
 import "./index.css";
 
-const root = document.getElementById("root");
-if (!root) throw new Error("Не знайдено елемент #root у index.html");
+import {
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 
-createRoot(root).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { BrowserRouter } from "react-router-dom";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 30_000,
+      retry: 2,
+      refetchOnWindowFocus: true,
+    },
+  },
+});
+
+ReactDOM.createRoot(
+  document.getElementById("root")!
+).render(
+  <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  </React.StrictMode>
 );

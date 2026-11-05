@@ -25,7 +25,7 @@ export function decodeCursor(raw: string): CursorPosition {
       parts.length !== 2 ||
       !startsAt ||
       !id ||
-      !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(startsAt) ||
+      !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?Z$/.test(startsAt) ||
       !Number.isFinite(Date.parse(startsAt)) ||
       !UUID_PATTERN.test(id) ||
       Buffer.from(decoded, "utf8").toString("base64url") !== raw

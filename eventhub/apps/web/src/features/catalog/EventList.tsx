@@ -1,40 +1,106 @@
-import { useEffect, useState } from "react";
-import type { Event } from "@eventhub/contracts";
-import { api } from "../../api/client";
+
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { Link, useLocation } from "react-router-dom";
+
+import { fetchEvents } from "../../api/queries";
+import { eventKeys } from "../../api/queryKeys";
+import { useCatalogFilters } from "./useCatalogFilters";
+
+import {
+  EventListSkeleton,
+  ErrorState,
+  EmptyState
+} from "./EventStates";
 
 export function EventList() {
-  const [events, setEvents] = useState<Event[]>([]);
-  const [problem, setProblem] = useState<string | null>(null);
+  const { filters, reset, hasFilters } =
+    useCatalogFilters();
 
-  useEffect(() => {
-    api
-      .GET("/events", { params: { query: { limit: 20 } } })
-      .then(({ data, error }) => {
-        if (error) {
-          setProblem(error.title);
-          return;
-        }
+  const location = useLocation();
 
-        if (data) {
-          setEvents(data.items);
-        }
-      });
-  }, []);
+  const {
+    data,
+    isPending,
+    isError,
+    error,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  } = useInfiniteQuery({
+    queryKey: eventKeys.list(filters),
 
-  if (problem) {
-    return <p role="alert">{problem}</p>;
+    queryFn: ({ pageParam }) =>
+      fetchEvents(filters, pageParam),
+
+    initialPageParam: undefined as string | undefined,
+
+    getNextPageParam: (lastPage) =>
+      lastPage.nextCursor ?? undefined
+  });
+
+  if (isPending) {
+    return <EventListSkeleton />;
+  }
+
+  if (isError) {
+    return (
+      <ErrorState
+        error={error}
+        onRetry={() => void refetch()}
+      />
+    );
+  }
+
+  const events = data.pages.flatMap(
+    (page) => page.items
+  );
+
+  if (events.length === 0) {
+    return (
+      <EmptyState
+        hasFilters={hasFilters}
+        onReset={reset}
+      />
+    );
   }
 
   return (
-    <ul className="event-list">
-      {events.map((e) => (
-        <li key={e.id}>
-          <strong>{e.title}</strong> – {e.venue.city},{" "}
-          {new Date(e.startsAt).toLocaleString("uk-UA")}
-          {" · від "}
-          {(e.minPrice.amount / 100).toFixed(2)} грн
-        </li>
-      ))}
-    </ul>
+    <div>
+      <ul className="event-list">
+        {events.map((event) => (
+          <li key={event.id}>
+            <Link
+              to={`/events/${event.id}`}
+              state={{ from: location.search }}
+              className="event-link"
+            >
+              <strong>{event.title}</strong>
+            </Link>
+
+            {" – "}
+            {event.venue.city}
+            {", "}
+            {new Date(event.startsAt).toLocaleString("uk-UA")}
+
+            {" · від "}
+            {(event.minPrice.amount / 100).toFixed(2)}
+            {" грн"}
+          </li>
+        ))}
+      </ul>
+
+      {hasNextPage && (
+        <button
+          className="load-more"
+          disabled={isFetchingNextPage}
+          onClick={() => void fetchNextPage()}
+        >
+          {isFetchingNextPage
+            ? "Завантаження..."
+            : "Показати ще"}
+        </button>
+      )}
+    </div>
   );
 }
