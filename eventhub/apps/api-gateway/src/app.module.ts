@@ -6,11 +6,13 @@ import { LoggerModule } from "nestjs-pino";
 import { CatalogModule } from "./catalog/catalog.module";
 import { ProblemFilter } from "./common/problem/problem.filter";
 import { PrismaModule } from "./prisma/prisma.module";
+import { AuthModule } from "./auth/auth.module";
 
 @Module({
   imports: [
     PrismaModule,
     CatalogModule,
+    AuthModule,
     LoggerModule.forRoot({
       pinoHttp: {
         level: process.env.LOG_LEVEL || "debug",

@@ -3,6 +3,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { App } from "./App";
 import "./index.css";
+import { AuthProvider } from "./auth/AuthProvider";
 
 import {
   QueryClient,
@@ -28,8 +29,11 @@ ReactDOM.createRoot(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
+       <AuthProvider>
         <App />
+        </AuthProvider>
       </BrowserRouter>
+
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   </React.StrictMode>
