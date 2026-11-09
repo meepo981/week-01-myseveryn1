@@ -86,6 +86,14 @@ export function LoginPage() {
                 ? "Увійти"
                 : "Зареєструватися"}
           </button>
+
+          <a
+            href="/api/auth/google"
+            className="google-login"
+          >
+            Увійти через Google
+          </a>
+
         </form>
 
         <button

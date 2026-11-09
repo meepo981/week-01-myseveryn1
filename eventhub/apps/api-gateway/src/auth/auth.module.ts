@@ -6,6 +6,7 @@ import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 import { TokenService } from "./token.service";
 import { JwtAuthGuard } from "./jwt-auth.guard";
+import { GoogleAuthService } from "./google-auth.service";
 
 @Module({
   imports: [JwtModule.register({})],
@@ -13,7 +14,8 @@ import { JwtAuthGuard } from "./jwt-auth.guard";
   providers: [
     AuthService,
     TokenService,
-    JwtAuthGuard
+    JwtAuthGuard,
+    GoogleAuthService
   ],
   exports: [JwtAuthGuard]
 })

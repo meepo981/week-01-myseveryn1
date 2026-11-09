@@ -7,12 +7,14 @@ import { CatalogModule } from "./catalog/catalog.module";
 import { ProblemFilter } from "./common/problem/problem.filter";
 import { PrismaModule } from "./prisma/prisma.module";
 import { AuthModule } from "./auth/auth.module";
+import { OrganizerModule } from "./organizer/organizer.module";
 
 @Module({
   imports: [
     PrismaModule,
     CatalogModule,
     AuthModule,
+    OrganizerModule,
     LoggerModule.forRoot({
       pinoHttp: {
         level: process.env.LOG_LEVEL || "debug",

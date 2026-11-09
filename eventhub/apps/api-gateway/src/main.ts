@@ -11,7 +11,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true
   });
-  app.use(cookieParser());
+  const cookieSecret = process.env.JWT_ACCESS_SECRET;
+
+if (!cookieSecret || cookieSecret.length < 32) {
+  throw new Error("JWT_ACCESS_SECRET is not configured");
+}
+
+app.use(cookieParser(cookieSecret));
   app.useLogger(app.get(Logger));
   app.useGlobalPipes(new ZodValidationPipe());
 

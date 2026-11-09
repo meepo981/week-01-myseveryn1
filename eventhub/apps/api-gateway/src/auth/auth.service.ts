@@ -11,6 +11,7 @@ import * as argon2 from "argon2";
 
 import { PrismaService } from "../prisma/prisma.service";
 import { TokenService } from "./token.service";
+import type { GoogleIdentity } from "./google-auth.service";
 import type {
   RegisterBody,
   LoginBody
@@ -114,4 +115,61 @@ export class AuthService {
 
     return this.toUserDto(user);
   }
+
+async loginWithGoogle(identity: GoogleIdentity) {
+  const linked = await this.prisma.oAuthAccount.findUnique({
+    where: {
+      provider_providerSubject: {
+        provider: "google",
+        providerSubject: identity.sub,
+      },
+    },
+    include: { user: true },
+  });
+
+
+  if (linked) {
+    return linked.user;
+  }
+
+
+  const existing = await this.prisma.user.findUnique({
+    where: { email: identity.email },
+  });
+
+  if (existing) {
+
+    if (!existing.emailVerified) {
+      throw new ConflictException(
+        "Account exists with password"
+      );
+    }
+
+
+    await this.prisma.oAuthAccount.create({
+      data: {
+        userId: existing.id,
+        provider: "google",
+        providerSubject: identity.sub,
+      },
+    });
+
+    return existing;
+  }
+
+
+  return this.prisma.user.create({
+    data: {
+      email: identity.email,
+      emailVerified: true,
+      oauthAccounts: {
+        create: {
+          provider: "google",
+          providerSubject: identity.sub,
+        },
+      },
+    },
+  });
+}
+
 }

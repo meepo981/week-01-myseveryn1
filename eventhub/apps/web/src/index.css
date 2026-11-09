@@ -282,3 +282,99 @@ body {
     padding: 20px;
   }
 }
+
+
+.google-login {
+  display: block;
+  text-align: center;
+  padding: 12px 18px;
+  margin-top: 16px;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  background: white;
+  color: #202124;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.google-login:hover {
+  background: #f1f3f4;
+}
+
+.organizer-list {
+  display: grid;
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.organizer-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.organizer-card h3 {
+  margin: 0 0 14px;
+}
+
+.organizer-card p {
+  margin: 8px 0;
+}
+
+.organizer-edit {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 10px 16px;
+  background: #2563eb;
+  color: white;
+  border-radius: 7px;
+  text-decoration: none;
+}
+
+.organizer-edit:hover {
+  background: #1d4ed8;
+}
+
+.organizer-form {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  max-width: 650px;
+  padding: 28px;
+  margin-top: 24px;
+}
+
+.organizer-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.organizer-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.organizer-form input,
+.organizer-form textarea {
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+  font: inherit;
+}
+
+.organizer-form button {
+  padding: 12px 18px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.organizer-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

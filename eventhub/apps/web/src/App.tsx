@@ -13,7 +13,11 @@ import { EventDetails } from "./features/catalog/EventDetails";
 import { LoginPage } from "./auth/LoginPage";
 import { MePage } from "./auth/MePage";
 import { RequireAuth } from "./auth/RequireAuth";
+import { RequireRole } from "./auth/RequireRole";
 import { useAuth } from "./auth/AuthContext";
+
+import { OrganizerPage } from "./organizer/OrganizerPage";
+import { OrganizerEditPage } from "./organizer/OrganizerEditPage";
 
 function Header() {
   const { user, loading, signOut } = useAuth();
@@ -34,7 +38,15 @@ function Header() {
         {!loading && (
           user ? (
             <>
+              {(user.role === "ORGANIZER" ||
+                user.role === "ADMIN") && (
+                <Link to="/organizer">
+                  Кабінет організатора
+                </Link>
+              )}
+
               <Link to="/me">{user.email}</Link>
+
               <button onClick={() => void handleLogout()}>
                 Вийти
               </button>
@@ -66,14 +78,20 @@ export function App() {
       <Header />
 
       <Routes>
-        <Route path="/" element={<CatalogPage />} />
+        <Route
+          path="/"
+          element={<CatalogPage />}
+        />
 
         <Route
           path="/events/:eventId"
           element={<EventDetails />}
         />
 
-        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/login"
+          element={<LoginPage />}
+        />
 
         <Route
           path="/me"
@@ -85,8 +103,30 @@ export function App() {
         />
 
         <Route
+          path="/organizer"
+          element={
+            <RequireRole>
+              <OrganizerPage />
+            </RequireRole>
+          }
+        />
+
+        <Route
+          path="/organizer/events/:id"
+          element={
+            <RequireRole>
+              <OrganizerEditPage />
+            </RequireRole>
+          }
+        />
+
+        <Route
           path="*"
-          element={<p>Сторінку не знайдено</p>}
+          element={
+            <main className="page">
+              <h1>Сторінку не знайдено</h1>
+            </main>
+          }
         />
       </Routes>
     </>
